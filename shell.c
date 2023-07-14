@@ -12,7 +12,7 @@
 int main(int argc, char *argv[], char *envp[])
 {
 	char *cmd = NULL;
-	char *cmd_argv[2];
+	char *cmd_argv[64];
 	size_t len = 0;
 	ssize_t read;
 	int status;
@@ -22,9 +22,10 @@ int main(int argc, char *argv[], char *envp[])
 
 	while (1 && !from_pipe)
 	{
-		if (isatty(STDIN_FILENO == 0))
+		if (isatty(STDIN_FILENO) == 0)
+		{
 			from_pipe = true;
-
+		}
 		write(STDOUT_FILENO, "#cisfun$ ", 9);
 		read = getline(&cmd, &len, stdin);
 
@@ -39,8 +40,7 @@ int main(int argc, char *argv[], char *envp[])
 			cmd[strlen(cmd) - 1] = '\0';
 		}
 
-		cmd_argv[0] = cmd;
-		cmd_argv[1] = NULL;
+		tokenize(cmd, cmd_argv);
 
 		pid = fork();
 
@@ -52,16 +52,21 @@ int main(int argc, char *argv[], char *envp[])
 
 		if (pid == 0)
 		{
-			execve(cmd, cmd_argv, envp);
-			perror("execve failed");
-			exit(1);
+			if (execve(cmd_argv[0], cmd_argv, envp) == -1);
+			{
+				perror("execve failed");
+				exit(1);
+			}
 		}
 		else
 		{
-			if (waitpid(pid, &status, 0) != pid)
-			{
-				perror("waitpid failed");
-			}
+			do {
+				if (waitpid(pid, &status, 0) != pid)
+				{
+					perror("waitpid failed");
+					exit(EXIT_FAILURE);
+				}
+			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		}
 	}
 
