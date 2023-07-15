@@ -17,6 +17,7 @@ int main(int argc, char *argv[], char *envp[])
 	ssize_t read;
 	int status;
 	bool from_pipe = false;
+	char *filepath;
 
 	pid_t pid;
 
@@ -40,7 +41,16 @@ int main(int argc, char *argv[], char *envp[])
 			cmd[strlen(cmd) - 1] = '\0';
 		}
 
+
 		tokenize(cmd, cmd_argv);
+
+		filepath = search_path(cmd_argv[0], envp);
+		if (filepath == NULL)
+		{
+			write(STDOUT_FILENO, cmd_argv[0], strlen(cmd_argv[0]));
+			write(STDOUT_FILENO, ": command not found\n", 20);
+			continue;
+		}
 
 		pid = fork();
 
@@ -52,7 +62,7 @@ int main(int argc, char *argv[], char *envp[])
 
 		if (pid == 0)
 		{
-			if (execve(cmd_argv[0], cmd_argv, envp) == -1);
+			if (execve(filepath, cmd_argv, envp) == -1)
 			{
 				perror("execve failed");
 				exit(1);
@@ -68,6 +78,8 @@ int main(int argc, char *argv[], char *envp[])
 				}
 			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		}
+
+		free(filepath);
 	}
 
 	free(cmd);

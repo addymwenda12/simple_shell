@@ -18,5 +18,6 @@
 /* Function prototypes for shell */
 int main(int argc, char *argv[], char *envp[]);
 void tokenize(char *cmd, char *cmd_argv[]);
+char *search_path(char *cmd, char **envp);
 
 #endif
