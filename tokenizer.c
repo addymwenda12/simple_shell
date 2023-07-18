@@ -1,24 +1,26 @@
 #include "shell.h"
 
 /**
- * tokenize - Use to tokenize array of strings
- * @cmd: Command string to be used
- * @cmd_argv: Array of string to be tokenized
+ * tokenize_path - Use to tokenize array of strings
+ * @PATH: The path string to be tokenized
  *
  * Return: The tokenized string
  */
 
-void tokenize(char *cmd, char *cmd_argv[])
+char **tokenize_path(char *PATH)
 {
+	char **tokens = malloc(1024 * sizeof(char *));
 	char *token;
 	int i = 0;
 
-	token = strtok(cmd, " ");
+	token = strtok(PATH, ":");
 	while (token != NULL)
 	{
-		cmd_argv[i] = token;
+		tokens[i] = token;
 		i++;
-		token = strtok(NULL, " ");
+		token = strtok(NULL, ":");
 	}
-	cmd_argv[i] = NULL;
+	tokens[i] = NULL;
+
+	return (tokens);
 }

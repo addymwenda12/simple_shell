@@ -11,13 +11,16 @@
 char *search_path(char *cmd, char **envp)
 {
 	char *PATH = getenv("PATH");
-	char *p = strtok(PATH, ":");
+	char **paths = tokenize_path(PATH);
 	char *filepath = malloc(1024);
 	char *temp, *temp_cmd;
+	char *p;
+	int i = 0;
 
-	while (p != NULL)
+	while (paths[i] != NULL)
 	{
 		temp = filepath;
+		p = paths[i];
 
 		while ((*temp++ = *p++))
 			;
@@ -30,11 +33,13 @@ char *search_path(char *cmd, char **envp)
 
 		if (access(filepath, F_OK) != -1)
 		{
+			free(paths);
 			return (filepath);
 		}
-		p = strtok(NULL, ":");
+		i++;
 	}
 
+	free(paths);
 	free(filepath);
 	return (NULL);
 }

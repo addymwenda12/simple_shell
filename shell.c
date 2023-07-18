@@ -9,7 +9,7 @@
  * Return: 0 on success
  */
 
-int main(int argc, char *argv[], char *envp[])
+int main(int argc, char *argv[], char *envp[], char *PATH)
 {
 	char *cmd = NULL;
 	char *cmd_argv[64];
@@ -42,7 +42,7 @@ int main(int argc, char *argv[], char *envp[])
 		}
 
 
-		tokenize(cmd, cmd_argv);
+		tokenize_path(PATH);
 
 		filepath = search_path(cmd_argv[0], envp);
 		if (filepath == NULL)

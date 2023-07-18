@@ -16,8 +16,8 @@
 #define HISTORY_COUNT 20
 
 /* Function prototypes for shell */
-int main(int argc, char *argv[], char *envp[]);
-void tokenize(char *cmd, char *cmd_argv[]);
+int main(int argc, char *argv[], char *envp[], char *PATH);
+char **tokenize_path(char *PATH);
 char *search_path(char *cmd, char **envp);
 
 #endif
