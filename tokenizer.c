@@ -13,6 +13,12 @@ char **tokenize_path(char *PATH)
 	char *token;
 	int i = 0;
 
+	if (tokens == NULL)
+	{
+		perror("Failed to allocate memory");
+		exit(EXIT_FAILURE);
+	}
+
 	token = strtok(PATH, ":");
 	while (token != NULL)
 	{

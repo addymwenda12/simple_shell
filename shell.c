@@ -9,7 +9,7 @@
  * Return: 0 on success
  */
 
-int main(int argc, char *argv[], char *envp[], char *PATH)
+int main(int argc, char *argv[], char *envp[])
 {
 	char *cmd = NULL;
 	char *cmd_argv[64];
@@ -42,14 +42,21 @@ int main(int argc, char *argv[], char *envp[], char *PATH)
 		}
 
 
-		tokenize_path(PATH);
+		tokenize(cmd, cmd_argv);
 
-		filepath = search_path(cmd_argv[0], envp);
-		if (filepath == NULL)
+		if (cmd_argv[0][0] == '/')
 		{
-			write(STDOUT_FILENO, cmd_argv[0], strlen(cmd_argv[0]));
-			write(STDOUT_FILENO, ": command not found\n", 20);
-			continue;
+			filepath = cmd_argv[0];
+		}
+		else
+		{
+			filepath = search_path(cmd_argv[0], envp);
+			if (filepath == NULL)
+			{
+				write(STDOUT_FILENO, cmd_argv[0], strlen(cmd_argv[0]));
+				write(STDOUT_FILENO, ": command not found\n", 20);
+				continue;
+			}
 		}
 
 		pid = fork();
@@ -78,10 +85,35 @@ int main(int argc, char *argv[], char *envp[], char *PATH)
 				}
 			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		}
-
-		free(filepath);
+		if (cmd_argv[0][0] != '/')
+		{
+			free(filepath);
+		}
 	}
 
 	free(cmd);
 	return (0);
+}
+
+/**
+ * tokenize - Use to tokenize array of strings
+ * @cmd: Command string to be used
+ * @cmd_argv: Array of string to be tokenized
+ *
+ * Return: The tokenized string
+ */
+
+void tokenize(char *cmd, char *cmd_argv[])
+{
+	char *token;
+	int i = 0;
+
+	token = strtok(cmd, " ");
+	while (token != NULL)
+	{
+		cmd_argv[i] = token;
+		i++;
+		token = strtok(NULL, " ");
+	}
+	cmd_argv[i] = NULL;
 }
