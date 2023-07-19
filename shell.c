@@ -14,6 +14,7 @@ int main(int argc, char *argv[], char *envp[])
 	char *cmd = NULL;
 	char *cmd_argv[64];
 	size_t len = 0;
+	char *path;
 	ssize_t read;
 	int status;
 	bool from_pipe = false;
@@ -43,6 +44,64 @@ int main(int argc, char *argv[], char *envp[])
 
 
 		tokenize(cmd, cmd_argv);
+
+		if (str_compare(cmd_argv[0], "exit") == 0)
+		{
+			status = 0;
+
+			if (cmd_argv[1] != NULL)
+			{
+				status = str_to_int(cmd_argv[1]);
+			}
+
+			free(cmd);
+			exit(status);
+		}
+
+		else if (str_compare(cmd_argv[0], "setenv") == 0)
+		{
+			if (cmd_argv[1] != NULL && cmd_argv[2] != NULL)
+			{
+				_setenv(cmd_argv[1], cmd_argv[2], 1);
+			}
+			else
+			{
+				write(STDERR_FILENO, "setenv: missing arguments\n", 26);
+			}
+		}
+
+		else if (str_compare(cmd_argv[0], "unsetenv") == 0)
+		{
+			if (cmd_argv[1] != NULL)
+			{
+				_unsetenv(cmd_argv[1]);
+			}
+			else
+			{
+				write(STDERR_FILENO, "unsetenv: missing argument\n", 27);
+			}
+		}
+
+		else if (str_compare(cmd_argv[0], "cd") == 0)
+		{
+			path = cmd_argv[1];
+
+			if (path == NULL)
+			{
+				path = getenv("HOME");
+			}
+			else if (str_compare(path, "-") == 0)
+			{
+				path = getenv("OLDPWD");
+			}
+			
+			if (_cd(path) == -1)
+			{
+				write(STDERR_FILENO, "cd: can't cd to ", 16);
+				write(STDERR_FILENO, path, strlen(path));
+				write(STDERR_FILENO, "\n", 1);
+			}
+		}
 
 		if (cmd_argv[0][0] == '/')
 		{

@@ -20,5 +20,10 @@ int main(int argc, char *argv[], char *envp[]);
 void tokenize(char *cmd, char *cmd_argv[]);
 char **tokenize_path(char *PATH);
 char *search_path(char *cmd, char **envp);
+int str_compare(char *s1, char *s2);
+int str_to_int(char *s);
+int _setenv(const char *name, const char *value, int overwrite);
+int _unsetenv(const char *name);
+int _cd(char *path);
 
 #endif
