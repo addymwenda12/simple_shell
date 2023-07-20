@@ -11,6 +11,8 @@
 
 int main(int argc, char *argv[], char *envp[])
 {
+	int j;
+	char **commands;
 	char *cmd = NULL;
 	char *cmd_argv[64];
 	size_t len = 0;
@@ -42,112 +44,117 @@ int main(int argc, char *argv[], char *envp[])
 			cmd[strlen(cmd) - 1] = '\0';
 		}
 
+		commands = command_separator(cmd);
 
-		tokenize(cmd, cmd_argv);
-
-		if (str_compare(cmd_argv[0], "exit") == 0)
+		for (j = 0; commands[j] != NULL; j++)
 		{
-			status = 0;
+			tokenize(commands[j], cmd_argv);
 
-			if (cmd_argv[1] != NULL)
+			if (str_compare(cmd_argv[0], "exit") == 0)
 			{
-				status = str_to_int(cmd_argv[1]);
+				status = 0;
+
+				if (cmd_argv[1] != NULL)
+				{
+					status = str_to_int(cmd_argv[1]);
+				}
+
+				free(cmd);
+				exit(status);
 			}
 
-			free(cmd);
-			exit(status);
-		}
-
-		else if (str_compare(cmd_argv[0], "setenv") == 0)
-		{
-			if (cmd_argv[1] != NULL && cmd_argv[2] != NULL)
+			else if (str_compare(cmd_argv[0], "setenv") == 0)
 			{
-				_setenv(cmd_argv[1], cmd_argv[2], 1);
+				if (cmd_argv[1] != NULL && cmd_argv[2] != NULL)
+				{
+					_setenv(cmd_argv[1], cmd_argv[2], 1);
+				}
+				else
+				{
+					write(STDERR_FILENO, "setenv: missing arguments\n", 26);
+				}
+			}
+
+			else if (str_compare(cmd_argv[0], "unsetenv") == 0)
+			{
+				if (cmd_argv[1] != NULL)
+				{
+					_unsetenv(cmd_argv[1]);
+				}
+				else
+				{
+					write(STDERR_FILENO, "unsetenv: missing argument\n", 27);
+				}
+			}
+
+			else if (str_compare(cmd_argv[0], "cd") == 0)
+			{
+				path = cmd_argv[1];
+
+				if (path == NULL)
+				{
+					path = getenv("HOME");
+				}
+				else if (str_compare(path, "-") == 0)
+				{
+					path = getenv("OLDPWD");
+				}
+
+				if (_cd(path) == -1)
+				{
+					write(STDERR_FILENO, "cd: can't cd to ", 16);
+					write(STDERR_FILENO, path, strlen(path));
+					write(STDERR_FILENO, "\n", 1);
+				}
+			}
+
+			if (cmd_argv[0][0] == '/')
+			{
+				filepath = cmd_argv[0];
 			}
 			else
 			{
-				write(STDERR_FILENO, "setenv: missing arguments\n", 26);
+				filepath = search_path(cmd_argv[0], envp);
+				if (filepath == NULL)
+				{
+					write(STDOUT_FILENO, cmd_argv[0], strlen(cmd_argv[0]));
+					write(STDOUT_FILENO, ": command not found\n", 20);
+					continue;
+				}
 			}
-		}
 
-		else if (str_compare(cmd_argv[0], "unsetenv") == 0)
-		{
-			if (cmd_argv[1] != NULL)
-			{
-				_unsetenv(cmd_argv[1]);
-			}
-			else
-			{
-				write(STDERR_FILENO, "unsetenv: missing argument\n", 27);
-			}
-		}
+			pid = fork();
 
-		else if (str_compare(cmd_argv[0], "cd") == 0)
-		{
-			path = cmd_argv[1];
-
-			if (path == NULL)
+			if (pid < 0)
 			{
-				path = getenv("HOME");
-			}
-			else if (str_compare(path, "-") == 0)
-			{
-				path = getenv("OLDPWD");
-			}
-			
-			if (_cd(path) == -1)
-			{
-				write(STDERR_FILENO, "cd: can't cd to ", 16);
-				write(STDERR_FILENO, path, strlen(path));
-				write(STDERR_FILENO, "\n", 1);
-			}
-		}
-
-		if (cmd_argv[0][0] == '/')
-		{
-			filepath = cmd_argv[0];
-		}
-		else
-		{
-			filepath = search_path(cmd_argv[0], envp);
-			if (filepath == NULL)
-			{
-				write(STDOUT_FILENO, cmd_argv[0], strlen(cmd_argv[0]));
-				write(STDOUT_FILENO, ": command not found\n", 20);
-				continue;
-			}
-		}
-
-		pid = fork();
-
-		if (pid < 0)
-		{
-			perror("Fork failed");
-			exit(1);
-		}
-
-		if (pid == 0)
-		{
-			if (execve(filepath, cmd_argv, envp) == -1)
-			{
-				perror("execve failed");
+				perror("Fork failed");
 				exit(1);
 			}
-		}
-		else
-		{
-			do {
-				if (waitpid(pid, &status, 0) != pid)
+
+			if (pid == 0)
+			{
+				if (execve(filepath, cmd_argv, envp) == -1)
 				{
-					perror("waitpid failed");
-					exit(EXIT_FAILURE);
+					perror("execve failed");
+					exit(1);
 				}
-			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+			}
+			else
+			{
+				do {
+					if (waitpid(pid, &status, 0) != pid)
+					{
+						perror("waitpid failed");
+						exit(EXIT_FAILURE);
+					}
+				} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+			}
+			if (cmd_argv[0][0] != '/')
+			{
+				free(filepath);
+			}
 		}
-		if (cmd_argv[0][0] != '/')
-		{
-			free(filepath);
-		}
+		free(commands);
 	}
 
 	free(cmd);

@@ -25,5 +25,6 @@ int str_to_int(char *s);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 int _cd(char *path);
+char **command_separator(char *cmd);
 
 #endif
