@@ -46,6 +46,7 @@ int main(int argc, char *argv[], char *envp[])
 		}
 
 		commands = command_separator(cmd);
+		cmd = variable_replacement(cmd);
 
 		for (j = 0; commands[j] != NULL; j++)
 		{
@@ -112,6 +113,7 @@ int main(int argc, char *argv[], char *envp[])
 			if (str_compare(cmd_argv[0], "alias") == 0)
 			{
 				handle_alias(cmd_argv, &alias_list);
+				continue;
 			}
 
 			if (cmd_argv[0][0] == '/')

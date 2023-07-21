@@ -109,3 +109,32 @@ char *my_strcat(char *s1, char *s2)
 	*p = '\0';
 	return (str);
 }
+
+/**
+ * itoa - converts integer to string
+ * @num: Number to be converted
+ *
+ * Return: Converted string
+ */
+
+char *itoa(int num)
+{
+	char *str = malloc(20);
+	int i = 0;
+	int sign = (num < 0)? -1 : 1;
+
+	num = (sign < 0)? -num : num;
+
+	do {
+		str[i++] = num % 10 + '0';
+	} while (num /= 10);
+
+	if (sign < 0)
+	{
+		str[i++] = '-';
+	}
+
+	str[i] = '\0';
+
+	return (str);
+}

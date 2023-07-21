@@ -46,9 +46,9 @@ int print_alias(char *name, alias_t **alias_list)
 	{
 		if (str_compare(current->name, name) == 0)
 		{
-			write(STDOUT_FILENO, current->name, strlen(current->name));
+			write(STDOUT_FILENO, current->name, my_strlen(current->name));
 			write(STDOUT_FILENO, "='", 2);
-			write(STDOUT_FILENO, current->value, strlen(current->value));
+			write(STDOUT_FILENO, current->value, my_strlen(current->value));
 			write(STDOUT_FILENO, "'\n", 2);
 			return (0);
 		}

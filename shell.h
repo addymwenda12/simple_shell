@@ -16,6 +16,13 @@
 #define HISTORY_COUNT 20
 
 /* Alias struct */
+
+/**
+ * struct alias - alias built in command
+ * @name: name of the alias
+ * @value: value of the alias
+ * @next: Points to the next node
+ */
 typedef struct alias
 {
 	char *name;
@@ -28,8 +35,15 @@ int print_all_aliases(alias_t **alias_list);
 int add_alias(char *name, char *value, alias_t **alias_list);
 int handle_alias(char **cmd_argv, alias_t **alias_list);
 
+extern char **environ;
+
 /* Function prototypes for shell */
 int my_strlen(char *s);
+char *my_strchr(char *s, int c);
+char *my_strcpy(char *dest, char *src);
+char *my_strncpy(char *dest, char *src, size_t n);
+int my_isalnum(int c);
+char *variable_replacement(char *cmd);
 char *my_strdup(char *src);
 char *my_strcat(char *s1, char *s2);
 int main(int argc, char *argv[], char *envp[]);
@@ -42,5 +56,6 @@ int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 int _cd(char *path);
 char **command_separator(char *cmd);
+char *itoa(int num);
 
 #endif

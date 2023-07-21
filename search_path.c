@@ -24,7 +24,7 @@ char *search_path(char *cmd, char **envp)
 		exit(EXIT_FAILURE);
 	}
 
-	PATH_copy = strdup(PATH);
+	PATH_copy =  my_strdup(PATH);
 	paths = tokenize_path(PATH_copy);
 
 	if (filepath == NULL)
