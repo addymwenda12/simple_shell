@@ -45,3 +45,67 @@ int str_to_int(char *s)
 
 	return (sign * result);
 }
+
+/**
+ * my_strlen - Measure the string length
+ * @s: String to be measured
+ *
+ * Return: The length of string
+ */
+
+int my_strlen(char *s)
+{
+	int len = 0;
+
+	while (*s++)
+	{
+		len++;
+	}
+	return (len);
+}
+
+/**
+ * my_strdup - Creates a duplicate of a string
+ * @src: string duplicate
+ *
+ * Return: The duplicated string
+ */
+
+char *my_strdup(char *src)
+{
+	char *str = malloc(my_strlen(src) + 1);
+	char *p = str;
+
+	while (*src)
+	{
+		*p++ = *src++;
+	}
+	*p = '\0';
+
+	return (str);
+}
+
+/**
+ * my_strcat - Concatenate one string to the end of another string
+ * @s1: The first string
+ * @s2: The second string
+ *
+ * Return: Concatenated string
+ */
+
+char *my_strcat(char *s1, char *s2)
+{
+	char *str = malloc(my_strlen(s1) + my_strlen(s2) + 1);
+	char *p = str;
+
+	while (*s1)
+	{
+		*p++ = *s1++;
+	}
+	while (*s2)
+	{
+		*p++ = *s2++;
+	}
+	*p = '\0';
+	return (str);
+}

@@ -23,6 +23,7 @@ int main(int argc, char *argv[], char *envp[])
 	char *filepath;
 
 	pid_t pid;
+	alias_t *alias_list = NULL;
 
 	while (1 && !from_pipe)
 	{
@@ -106,6 +107,11 @@ int main(int argc, char *argv[], char *envp[])
 					write(STDERR_FILENO, path, strlen(path));
 					write(STDERR_FILENO, "\n", 1);
 				}
+			}
+
+			if (str_compare(cmd_argv[0], "alias") == 0)
+			{
+				handle_alias(cmd_argv, &alias_list);
 			}
 
 			if (cmd_argv[0][0] == '/')

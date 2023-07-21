@@ -15,7 +15,23 @@
 #define MAX_CMD_LEN 128
 #define HISTORY_COUNT 20
 
+/* Alias struct */
+typedef struct alias
+{
+	char *name;
+	char *value;
+	struct alias *next;
+} alias_t;
+
+int print_alias(char *name, alias_t **alias_list);
+int print_all_aliases(alias_t **alias_list);
+int add_alias(char *name, char *value, alias_t **alias_list);
+int handle_alias(char **cmd_argv, alias_t **alias_list);
+
 /* Function prototypes for shell */
+int my_strlen(char *s);
+char *my_strdup(char *src);
+char *my_strcat(char *s1, char *s2);
 int main(int argc, char *argv[], char *envp[]);
 void tokenize(char *cmd, char *cmd_argv[]);
 char **tokenize_path(char *PATH);
