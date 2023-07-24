@@ -64,10 +64,15 @@ char *create_filepath(char *path, char *cmd)
 
 char *search_path(char *cmd, char **envp)
 {
-	char *PATH_copy = get_path();
-	char **paths = tokenize_path(PATH_copy);
+	char *PATH_copy;
+	char **paths;
 	char *filepath;
 	int i = 0;
+
+	(void)envp;
+
+	PATH_copy = get_path();
+	paths = tokenize_path(PATH_copy);
 
 	while (paths[i] != NULL)
 	{

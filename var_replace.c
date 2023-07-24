@@ -9,8 +9,7 @@
  * Return: The new command string with the variable replaced
  */
 
-char *replace_variable(char *cmd, char *start,
-		int last_exit_status)
+char *replace_variable(char *cmd, char *start)
 {
 	char *end;
 	char *name;
@@ -59,17 +58,15 @@ char *replace_variable(char *cmd, char *start,
 
 char *variable_replacement(char *cmd)
 {
-	int last_exit_status = 0;
 	char *start = cmd;
 	char *new_cmd;
-	char *value;
 
 	while ((start = my_strchr(start, '$')) != NULL)
 	{
-		new_cmd = replace_variable(cmd, start, last_exit_status);
+		new_cmd = replace_variable(cmd, start);
 		cmd = new_cmd;
 
-		start = cmd + (start - cmd) + my_strlen(value);
+		start = cmd;
 	}
 
 	return (cmd);

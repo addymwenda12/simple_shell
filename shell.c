@@ -80,6 +80,9 @@ int main(int argc, char *argv[], char *envp[])
 
 	alias_t *alias_list = NULL;
 
+	(void)argc;
+	(void)argv;
+
 	while (1 && !from_pipe)
 	{
 		if (isatty(STDIN_FILENO) == 0)
