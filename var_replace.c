@@ -43,7 +43,7 @@ char *variable_replacement(char *cmd)
 			}
 		}
 
-		new_cmd = malloc(my_strlen(cmd) - my_strlen(name) +
+		new_cmd = malloc(my_strlen(cmd) + my_strlen(name) +
 				my_strlen(value) + 1);
 		my_strncpy(new_cmd, cmd, start - cmd);
 		my_strcpy(new_cmd + (start - cmd), value);

@@ -15,6 +15,8 @@
 #define MAX_CMD_LEN 128
 #define HISTORY_COUNT 20
 
+
+
 /* Alias struct */
 
 /**
@@ -55,6 +57,12 @@ int str_to_int(char *s);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 int _cd(char *path);
+void handle_command(char *cmd, char *cmd_argv[], char *envp[], alias_t **alias_list);
+void execute_commands(char *cmd_argv[], char *envp[]);
+void handle_cd(char *cmd_argv[]);
+void handle_unsetenv(char *cmd_argv[]);
+void handle_setenv(char *cmd_argv[]);
+void handle_exit(char *cmd, char *cmd_argv[]);
 char **command_separator(char *cmd);
 char *itoa(int num);
 

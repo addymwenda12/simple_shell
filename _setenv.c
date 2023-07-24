@@ -35,3 +35,39 @@ int _unsetenv(const char *name)
 	}
 	return (0);
 }
+
+/**
+ * handle_setenv - Handles addition of env variable
+ * @cmd_argv: Argument vector of set env
+ *
+ */
+
+void handle_setenv(char *cmd_argv[])
+{
+	if (cmd_argv[1] != NULL && cmd_argv[2] != NULL)
+	{
+		_setenv(cmd_argv[1], cmd_argv[2], 1);
+	}
+	else
+	{
+		write(STDERR_FILENO, "setenv: missing arguments\n", 26);
+	}
+}
+
+/**
+ * handle_unsetenv - Handles removal of env variable
+ * @cmd_argv: Argument vector for unset env
+ *
+ */
+
+void handle_unsetenv(char *cmd_argv[])
+{
+	if (cmd_argv[1] != NULL)
+	{
+		_unsetenv(cmd_argv[1]);
+	}
+	else
+	{
+		write(STDERR_FILENO, "unsetenv: missing argument\n", 27);
+	}
+}
