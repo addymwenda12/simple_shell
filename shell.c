@@ -78,7 +78,6 @@ int main(int argc, char *argv[], char *envp[])
 	ssize_t read;
 	bool from_pipe = false;
 
-	pid_t pid;
 	alias_t *alias_list = NULL;
 
 	while (1 && !from_pipe)

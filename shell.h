@@ -57,7 +57,15 @@ int str_to_int(char *s);
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 int _cd(char *path);
-void handle_command(char *cmd, char *cmd_argv[], char *envp[], alias_t **alias_list);
+void handle_command(char *cmd, char *cmd_argv[], char *envp[],
+		alias_t **alias_list);
+char *replace_variable(char *cmd, char *start,
+		int last_exit_status);
+void execute_child(char *filepath, char *cmd_argv[],
+		char *envp[]);
+char *get_file_path(char *cmd, char *envp[]);
+char *get_path(void);
+char *create_filepath(char *path, char *cmd);
 void execute_commands(char *cmd_argv[], char *envp[]);
 void handle_cd(char *cmd_argv[]);
 void handle_unsetenv(char *cmd_argv[]);
