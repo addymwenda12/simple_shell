@@ -75,6 +75,7 @@ int main(int argc, char *argv[], char *envp[])
 	char *cmd = NULL;
 	char *cmd_argv[64];
 	size_t len = 0;
+	int last_exit_status = 0;
 	ssize_t read;
 	bool from_pipe = false;
 
@@ -104,7 +105,7 @@ int main(int argc, char *argv[], char *envp[])
 		}
 
 		commands = command_separator(cmd);
-		cmd = variable_replacement(cmd);
+		cmd = variable_replacement(cmd, last_exit_status);
 
 		for (j = 0; commands[j] != NULL; j++)
 		{

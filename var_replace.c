@@ -9,7 +9,8 @@
  * Return: The new command string with the variable replaced
  */
 
-char *replace_variable(char *cmd, char *start)
+char *replace_variable(char *cmd, char *start,
+		int last_exit_status)
 {
 	char *end;
 	char *name;
@@ -26,6 +27,10 @@ char *replace_variable(char *cmd, char *start)
 	name = strndup(start + 1, end - start - 1);
 
 	if (str_compare(name, "?") == 0)
+	{
+		value = itoa(last_exit_status);
+	}
+	else if (str_compare(name, "$") == 0)
 	{
 		value = itoa(getpid());
 	}
@@ -52,18 +57,19 @@ char *replace_variable(char *cmd, char *start)
 /**
  * variable_replacement - Replaces variables in a command string
  * @cmd: The command string
+ * @last_exit_status: Exit the status after the replacement
  *
  * Return: The command string with variables replaced
  */
 
-char *variable_replacement(char *cmd)
+char *variable_replacement(char *cmd, int last_exit_status)
 {
 	char *start = cmd;
 	char *new_cmd;
 
 	while ((start = my_strchr(start, '$')) != NULL)
 	{
-		new_cmd = replace_variable(cmd, start);
+		new_cmd = replace_variable(cmd, start, last_exit_status);
 		cmd = new_cmd;
 
 		start = cmd;
