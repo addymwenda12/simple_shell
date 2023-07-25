@@ -101,7 +101,8 @@ char *my_strcat(char *s1, char *s2)
 char *itoa(int num)
 {
 	char *str = malloc(20);
-	int i = 0;
+	char temp;
+	int i = 0, j = 0;
 	int sign = (num < 0) ? -1 : 1;
 
 	num = (sign < 0) ? -num : num;
@@ -116,6 +117,13 @@ char *itoa(int num)
 	}
 
 	str[i] = '\0';
+
+	for (j = 0; j < i / 2; j++)
+	{
+		temp = str[j];
+		str[j] = str[i - j - 1];
+		str[i - j - 1] = temp;
+	}
 
 	return (str);
 }

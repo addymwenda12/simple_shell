@@ -13,6 +13,11 @@ char *get_file_path(char *cmd, char *envp[])
 {
 	char *filepath;
 
+	if (cmd == NULL || envp == NULL)
+	{
+		return (NULL);
+	}
+
 	if (cmd[0] == '/')
 	{
 		filepath = cmd;
