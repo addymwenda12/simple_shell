@@ -112,6 +112,11 @@ int main(int argc, char *argv[], char *envp[])
 			handle_command(commands[j], cmd_argv, envp, &alias_list);
 		}
 		free(commands);
+
+		if (from_pipe)
+		{
+			break;
+		}
 	}
 	free(cmd);
 	return (0);

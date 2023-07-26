@@ -24,11 +24,6 @@ char *replace_variable(char *cmd, char *start,
 		end++;
 	}
 
-	if (start == end || *end != '$')
-	{
-		return (cmd);
-	}
-
 	name = strndup(start + 1, end - start - 1);
 
 	if (str_compare(name, "?") == 0)
@@ -75,23 +70,11 @@ char *variable_replacement(char *cmd, int last_exit_status)
 
 	while ((start = my_strchr(start, '$')) != NULL)
 	{
-		if (*(start + 1) == '?')
-		{
-			new_cmd = replace_variable(cmd, start, last_exit_status);
-			cmd = new_cmd;
-			start += 2;
-		}
-		else if (*(start + 1) == '$')
-		{
-			new_cmd = replace_variable(cmd, start, getpid());
-			cmd = new_cmd;
-			start += 2;
-		}
-		else
-		{
-			start++;
-		}
-	}
+		new_cmd = replace_variable(cmd, start,
+				last_exit_status);
+		cmd = new_cmd;
 
+		start = cmd;
+	}
 	return (cmd);
 }
