@@ -48,6 +48,7 @@ char *my_strncpy(char *dest, char *src, size_t n);
 int my_isalnum(int c);
 char *variable_replacement(char *cmd,
 		char **envp, int last_exit_status);
+int my_strncmp(char *s1, char *s2, unsigned int n);
 char *my_strdup(char *src);
 char *my_strcat(char *s1, char *s2);
 int main(int argc, char *argv[], char *envp[]);

@@ -15,7 +15,7 @@ char *my_getenv(char *name, char **envp)
 
 	for (env = envp; *env != 0; env++)
 	{
-		if (strncmp(*env, name, len) == 0 && (*env)[len] == '=')
+		if (my_strncmp(*env, name, len) == 0 && (*env)[len] == '=')
 		{
 			return &(*env)[len + 1];
 		}
