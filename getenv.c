@@ -1,11 +1,11 @@
 #include "shell.h"
 
 /**
- * my_getenv: Implementation of geenv() function
+ * my_getenv - Get the value of an environment variable
  * @name: Name of the environment
  * @envp: The environment variable
  *
- * Return: Null if environment function fails
+ * Return: NULL if environment function fails
  */
 
 char *my_getenv(char *name, char **envp)
@@ -17,7 +17,7 @@ char *my_getenv(char *name, char **envp)
 	{
 		if (my_strncmp(*env, name, len) == 0 && (*env)[len] == '=')
 		{
-			return &(*env)[len + 1];
+			return (&(*env)[len + 1]);
 		}
 	}
 	return (NULL);

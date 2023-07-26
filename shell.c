@@ -32,6 +32,8 @@ void handle_exit(char *cmd, char *cmd_argv[])
 void handle_command(char *cmd, char *cmd_argv[], char *envp[],
 		alias_t **alias_list)
 {
+	int last_exit_status = 0;
+
 	tokenize(cmd, cmd_argv);
 
 	if (str_compare(cmd_argv[0], "exit") == 0)
@@ -56,7 +58,7 @@ void handle_command(char *cmd, char *cmd_argv[], char *envp[],
 	}
 	else
 	{
-		execute_commands(cmd_argv, envp);
+		execute_commands(cmd_argv, envp, &last_exit_status);
 	}
 }
 /**
@@ -105,12 +107,13 @@ int main(int argc, char *argv[], char *envp[])
 		}
 
 		commands = command_separator(cmd);
-		cmd = variable_replacement(cmd, envp, last_exit_status);
 
 		for (j = 0; commands[j] != NULL; j++)
 		{
 			handle_command(commands[j], cmd_argv, envp, &alias_list);
 		}
+		cmd = variable_replacement(cmd, envp, last_exit_status);
+
 		free(commands);
 
 		if (from_pipe)

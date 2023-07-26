@@ -69,7 +69,8 @@ void execute_child(char *filepath, char *cmd_argv[],
 char *get_file_path(char *cmd, char *envp[]);
 char *get_path(char **envp);
 char *create_filepath(char *path, char *cmd);
-void execute_commands(char *cmd_argv[], char *envp[]);
+void execute_commands(char *cmd_argv[], char *envp[],
+		int *last_exit_status);
 void handle_cd(char *cmd_argv[], char **envp);
 void handle_unsetenv(char *cmd_argv[]);
 void handle_setenv(char *cmd_argv[]);

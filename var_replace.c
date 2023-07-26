@@ -5,6 +5,7 @@
  * @cmd: The command string
  * @start: Pointer to the position of the '$' character
  * @last_exit_status: The last exit status value
+ * @envp: The environment variable
  *
  * Return: The new command string with the variable replaced
  */
@@ -59,6 +60,7 @@ char *replace_variable(char *cmd, char *start,
  * variable_replacement - Replaces variables in a command string
  * @cmd: The command string
  * @last_exit_status: Exit the status after the replacement
+ * @envp: The environment variable
  *
  * Return: The command string with variables replaced
  */

@@ -58,10 +58,12 @@ void execute_child(char *filepath, char *cmd_argv[],
  * execute_commands - Executes other commands in shell program
  * @cmd_argv: Argument vector for commands
  * @envp: Array that store environment variables
+ * @last_exit_status: The exit of shell when a variable is replaced
  *
  */
 
-void execute_commands(char *cmd_argv[], char *envp[])
+void execute_commands(char *cmd_argv[], char *envp[],
+		int *last_exit_status)
 {
 	char *filepath;
 	int status;
@@ -91,6 +93,10 @@ void execute_commands(char *cmd_argv[], char *envp[])
 				{
 					perror("waitpid failed");
 					exit(EXIT_FAILURE);
+				}
+				if (WIFEXITED(status))
+				{
+					*last_exit_status = WEXITSTATUS(status);
 				}
 			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		}
