@@ -42,10 +42,12 @@ extern char **environ;
 /* Function prototypes for shell */
 int my_strlen(char *s);
 char *my_strchr(char *s, int c);
+char *my_getenv(char *name, char **envp);
 char *my_strcpy(char *dest, char *src);
 char *my_strncpy(char *dest, char *src, size_t n);
 int my_isalnum(int c);
-char *variable_replacement(char *cmd, int last_exit_status);
+char *variable_replacement(char *cmd,
+		char **envp, int last_exit_status);
 char *my_strdup(char *src);
 char *my_strcat(char *s1, char *s2);
 int main(int argc, char *argv[], char *envp[]);
@@ -60,14 +62,14 @@ int _cd(char *path);
 void handle_command(char *cmd, char *cmd_argv[], char *envp[],
 		alias_t **alias_list);
 char *replace_variable(char *cmd, char *start,
-		int last_exit_status);
+		char **envp, int last_exit_status);
 void execute_child(char *filepath, char *cmd_argv[],
 		char *envp[]);
 char *get_file_path(char *cmd, char *envp[]);
-char *get_path(void);
+char *get_path(char **envp);
 char *create_filepath(char *path, char *cmd);
 void execute_commands(char *cmd_argv[], char *envp[]);
-void handle_cd(char *cmd_argv[]);
+void handle_cd(char *cmd_argv[], char **envp);
 void handle_unsetenv(char *cmd_argv[]);
 void handle_setenv(char *cmd_argv[]);
 void handle_exit(char *cmd, char *cmd_argv[]);

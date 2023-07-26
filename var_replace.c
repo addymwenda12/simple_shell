@@ -10,7 +10,7 @@
  */
 
 char *replace_variable(char *cmd, char *start,
-		int last_exit_status)
+		char **envp, int last_exit_status)
 {
 	char *end;
 	char *name;
@@ -36,7 +36,7 @@ char *replace_variable(char *cmd, char *start,
 	}
 	else
 	{
-		value = getenv(name);
+		value = my_getenv(name, envp);
 		if (value == NULL)
 		{
 			value = "";
@@ -63,14 +63,15 @@ char *replace_variable(char *cmd, char *start,
  * Return: The command string with variables replaced
  */
 
-char *variable_replacement(char *cmd, int last_exit_status)
+char *variable_replacement(char *cmd,
+		char **envp, int last_exit_status)
 {
 	char *start = cmd;
 	char *new_cmd;
 
 	while ((start = my_strchr(start, '$')) != NULL)
 	{
-		new_cmd = replace_variable(cmd, start,
+		new_cmd = replace_variable(cmd, start, envp,
 				last_exit_status);
 		cmd = new_cmd;
 

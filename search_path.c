@@ -2,13 +2,14 @@
 
 /**
  * get_path - Gets the path of shell
+ * @envp: Environment variable
  *
  * Return: The path of the shell
  */
 
-char *get_path(void)
+char *get_path(char **envp)
 {
-	char *PATH = getenv("PATH");
+	char *PATH = my_getenv("PATH", envp);
 
 	if (PATH == NULL)
 	{
@@ -71,7 +72,7 @@ char *search_path(char *cmd, char **envp)
 
 	(void)envp;
 
-	PATH_copy = get_path();
+	PATH_copy = get_path(envp);
 	paths = tokenize_path(PATH_copy);
 
 	while (paths[i] != NULL)

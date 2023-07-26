@@ -27,20 +27,20 @@ int _cd(char *path)
 /**
  * handle_cd - Handles cd command
  * @cmd_argv: Command argument for cd
- *
+ * @envp: Environment variable
  */
 
-void handle_cd(char *cmd_argv[])
+void handle_cd(char *cmd_argv[], char **envp)
 {
 	char *path = cmd_argv[1];
 
 	if (path == NULL)
 	{
-		path = getenv("HOME");
+		path = my_getenv("HOME", envp);
 	}
 	else if (str_compare(path, "-") == 0)
 	{
-		path = getenv("OLDPWD");
+		path = my_getenv("OLDPWD", envp);
 	}
 
 	if (_cd(path) == -1)

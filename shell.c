@@ -48,7 +48,7 @@ void handle_command(char *cmd, char *cmd_argv[], char *envp[],
 	}
 	else if (str_compare(cmd_argv[0], "cd") == 0)
 	{
-		handle_cd(cmd_argv);
+		handle_cd(cmd_argv, envp);
 	}
 	else if (str_compare(cmd_argv[0], "alias") == 0)
 	{
@@ -99,13 +99,13 @@ int main(int argc, char *argv[], char *envp[])
 			exit(0);
 		}
 
-		if (cmd[strlen(cmd) - 1] == '\n')
+		if (cmd[my_strlen(cmd) - 1] == '\n')
 		{
-			cmd[strlen(cmd) - 1] = '\0';
+			cmd[my_strlen(cmd) - 1] = '\0';
 		}
 
 		commands = command_separator(cmd);
-		cmd = variable_replacement(cmd, last_exit_status);
+		cmd = variable_replacement(cmd, envp, last_exit_status);
 
 		for (j = 0; commands[j] != NULL; j++)
 		{
