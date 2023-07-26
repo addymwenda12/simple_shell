@@ -71,6 +71,12 @@ char *get_path(char **envp);
 char *create_filepath(char *path, char *cmd);
 void execute_commands(char *cmd_argv[], char *envp[],
 		int *last_exit_status);
+void handle_child_process(pid_t pid, int *last_exit_status);
+char *get_value(char *name, char **envp, int last_exit_status);
+void handle_input(char **commands, char *cmd_argv[],
+		char *envp[], alias_t **alias_list);
+void handle_builtin_commands(char *cmd, char *cmd_argv[],
+		char *envp[], alias_t **alias_list);
 void handle_cd(char *cmd_argv[], char **envp);
 void handle_unsetenv(char *cmd_argv[]);
 void handle_setenv(char *cmd_argv[]);

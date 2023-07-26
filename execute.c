@@ -55,6 +55,29 @@ void execute_child(char *filepath, char *cmd_argv[],
 }
 
 /**
+ * handle_child_process - Handles the child process
+ * @pid: The process ID
+ * @last_exit_status: The exit of shell when a variable is replaced
+ */
+
+void handle_child_process(pid_t pid, int *last_exit_status)
+{
+	int status;
+
+	do {
+		if (waitpid(pid, &status, 0) != pid)
+		{
+			perror("waitpid failed");
+			exit(EXIT_FAILURE);
+		}
+		if (WIFEXITED(status))
+		{
+			*last_exit_status - WEXITSTATUS(status);
+		}
+	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+}
+
+/**
  * execute_commands - Executes other commands in shell program
  * @cmd_argv: Argument vector for commands
  * @envp: Array that store environment variables
@@ -66,7 +89,6 @@ void execute_commands(char *cmd_argv[], char *envp[],
 		int *last_exit_status)
 {
 	char *filepath;
-	int status;
 
 	pid_t pid;
 
@@ -88,17 +110,7 @@ void execute_commands(char *cmd_argv[], char *envp[],
 		}
 		else
 		{
-			do {
-				if (waitpid(pid, &status, 0) != pid)
-				{
-					perror("waitpid failed");
-					exit(EXIT_FAILURE);
-				}
-				if (WIFEXITED(status))
-				{
-					*last_exit_status = WEXITSTATUS(status);
-				}
-			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+			handle_child_process(pid, last_exit_status);
 		}
 
 		if (cmd_argv[0][0] != '/')

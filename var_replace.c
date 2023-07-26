@@ -1,6 +1,40 @@
 #include "shell.h"
 
 /**
+ * get_value - Get the value of the variable
+ * @name: The name of the variable
+ * @envp: The environment variable
+ * @last_exit_status: The last status after the variable has
+ * been replaced
+ *
+ * Return: The value of the variable
+ */
+
+char *get_value(char *name, char **envp, int last_exit_status)
+{
+	char *value;
+
+	if (str_compare(name, "?") == 0)
+	{
+		value = itoa(last_exit_status);
+	}
+	else if (str_compare(name, "$") == 0)
+	{
+		value = itoa(getpid());
+	}
+	else
+	{
+		value = my_getenv(name, envp);
+		if (value == NULL)
+		{
+			value = "";
+		}
+	}
+
+	return (value);
+}
+
+/**
  * replace_variable - Replaces a single variable in a command string
  * @cmd: The command string
  * @start: Pointer to the position of the '$' character
@@ -26,23 +60,7 @@ char *replace_variable(char *cmd, char *start,
 	}
 
 	name = strndup(start + 1, end - start - 1);
-
-	if (str_compare(name, "?") == 0)
-	{
-		value = itoa(last_exit_status);
-	}
-	else if (str_compare(name, "$") == 0)
-	{
-		value = itoa(getpid());
-	}
-	else
-	{
-		value = my_getenv(name, envp);
-		if (value == NULL)
-		{
-			value = "";
-		}
-	}
+	value = get_value(name, envp, last_exit_status);
 
 	new_cmd = malloc(my_strlen(cmd) + my_strlen(name) +
 			my_strlen(value) + 1);
