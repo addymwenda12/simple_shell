@@ -39,7 +39,7 @@ int handle_alias(char **cmd_argv, alias_t **alias_list);
 
 extern char **environ;
 
-/* Function prototypes for shell */
+/* Function prototypes for shell Program*/
 int my_strlen(char *s);
 char *my_strchr(char *s, int c);
 char *my_getenv(char *name, char **envp);
