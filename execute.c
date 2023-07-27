@@ -57,10 +57,9 @@ void execute_child(char *filepath, char *cmd_argv[],
 /**
  * handle_child_process - Handles the child process
  * @pid: The process ID
- * @last_exit_status: The exit of shell when a variable is replaced
  */
 
-void handle_child_process(pid_t pid, int *last_exit_status)
+void handle_child_process(pid_t pid)
 {
 	int status;
 
@@ -70,10 +69,6 @@ void handle_child_process(pid_t pid, int *last_exit_status)
 			perror("waitpid failed");
 			exit(EXIT_FAILURE);
 		}
-		if (WIFEXITED(status))
-		{
-			*last_exit_status = WEXITSTATUS(status);
-		}
 	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 }
 
@@ -81,12 +76,10 @@ void handle_child_process(pid_t pid, int *last_exit_status)
  * execute_commands - Executes other commands in shell program
  * @cmd_argv: Argument vector for commands
  * @envp: Array that store environment variables
- * @last_exit_status: The exit of shell when a variable is replaced
  *
  */
 
-void execute_commands(char *cmd_argv[], char *envp[],
-		int *last_exit_status)
+void execute_commands(char *cmd_argv[], char *envp[])
 {
 	char *filepath;
 
@@ -110,7 +103,7 @@ void execute_commands(char *cmd_argv[], char *envp[],
 		}
 		else
 		{
-			handle_child_process(pid, last_exit_status);
+			handle_child_process(pid);
 		}
 
 		if (cmd_argv[0][0] != '/')

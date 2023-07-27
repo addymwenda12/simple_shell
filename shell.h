@@ -46,8 +46,6 @@ char *my_getenv(char *name, char **envp);
 char *my_strcpy(char *dest, char *src);
 char *my_strncpy(char *dest, char *src, size_t n);
 int my_isalnum(int c);
-char *variable_replacement(char *cmd,
-		char **envp, int last_exit_status);
 int my_strncmp(char *s1, char *s2, unsigned int n);
 char *my_strdup(char *src);
 char *my_strcat(char *s1, char *s2);
@@ -62,17 +60,14 @@ int _unsetenv(const char *name);
 int _cd(char *path);
 void handle_command(char *cmd, char *cmd_argv[], char *envp[],
 		alias_t **alias_list);
-char *replace_variable(char *cmd, char *start,
-		char **envp, int last_exit_status);
 void execute_child(char *filepath, char *cmd_argv[],
 		char *envp[]);
 char *get_file_path(char *cmd, char *envp[]);
 char *get_path(char **envp);
 char *create_filepath(char *path, char *cmd);
-void execute_commands(char *cmd_argv[], char *envp[],
-		int *last_exit_status);
-void handle_child_process(pid_t pid, int *last_exit_status);
-char *get_value(char *name, char **envp, int last_exit_status);
+void execute_commands(char *cmd_argv[], char *envp[]);
+void handle_child_process(pid_t pid);
+char *get_value(char *name, char **envp);
 void handle_cd(char *cmd_argv[], char **envp);
 void handle_unsetenv(char *cmd_argv[]);
 void handle_setenv(char *cmd_argv[]);
