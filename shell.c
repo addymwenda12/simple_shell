@@ -32,6 +32,10 @@ void handle_exit(char *cmd, char *cmd_argv[])
 void handle_command(char *cmd, char *cmd_argv[], char *envp[],
 		alias_t **alias_list)
 {
+	int last_exit_status = 0;
+
+	tokenize(cmd, cmd_argv);
+
 	if (str_compare(cmd_argv[0], "exit") == 0)
 	{
 		handle_exit(cmd, cmd_argv);
@@ -52,27 +56,10 @@ void handle_command(char *cmd, char *cmd_argv[], char *envp[],
 	{
 		handle_alias(cmd_argv, alias_list);
 	}
-}
-
-/**
- * handle_builtin_commands - Hnadles builtin commands
- * @cmd: Command to be used
- * @cmd_argv: Array that stores the command
- * @envp: Array that stores environment variable
- * @alias_list: Lists of alias
- *
- */
-
-void handle_builtin_commands(char *cmd, char *cmd_argv[],
-		char *envp[], alias_t **alias_list)
-{
-	int last_exit_status = 0;
-
-	tokenize(cmd, cmd_argv);
-
-	handle_command(cmd, cmd_argv, envp, alias_list);
-
-	execute_commands(cmd_argv, envp, &last_exit_status);
+	else
+	{
+		execute_commands(cmd_argv, envp, &last_exit_status);
+	}
 }
 
 /**
@@ -86,6 +73,7 @@ void handle_builtin_commands(char *cmd, char *cmd_argv[],
 
 int main(int argc, char *argv[], char *envp[])
 {
+	int j;
 	char **commands;
 	char *cmd = NULL;
 	char *cmd_argv[64];
@@ -119,11 +107,14 @@ int main(int argc, char *argv[], char *envp[])
 			cmd[my_strlen(cmd) - 1] = '\0';
 		}
 
+		cmd = variable_replacement(cmd, envp, last_exit_status);
+
 		commands = command_separator(cmd);
 
-		handle_input(commands, cmd_argv, envp, &alias_list);
-
-		cmd = variable_replacement(cmd, envp, last_exit_status);
+		for (j = 0; commands[j] != NULL; j++)
+		{
+			handle_command(commands[j], cmd_argv, envp, &alias_list);
+		}
 
 		free(commands);
 

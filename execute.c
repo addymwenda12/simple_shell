@@ -72,7 +72,7 @@ void handle_child_process(pid_t pid, int *last_exit_status)
 		}
 		if (WIFEXITED(status))
 		{
-			*last_exit_status - WEXITSTATUS(status);
+			*last_exit_status = WEXITSTATUS(status);
 		}
 	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 }
