@@ -49,8 +49,12 @@ void execute_child(char *filepath, char *cmd_argv[],
 {
 	if (execve(filepath, cmd_argv, envp) == -1)
 	{
-		perror("execve failed");
-		exit(1);
+		write(STDERR_FILENO, filepath, my_strlen(filepath));
+		write(STDERR_FILENO, ": ", 2);
+		write(STDERR_FILENO, cmd_argv[0], my_strlen(cmd_argv[0]));
+		write(STDERR_FILENO, ": not found\n", 12);
+
+		exit(127);
 	}
 }
 
@@ -59,17 +63,22 @@ void execute_child(char *filepath, char *cmd_argv[],
  * @pid: The process ID
  */
 
-void handle_child_process(pid_t pid)
+void handle_child_process(pid_t pid, int *status)
 {
-	int status;
+	int child_status;
 
 	do {
-		if (waitpid(pid, &status, 0) != pid)
+		if (waitpid(pid, &child_status, 0) != pid)
 		{
 			perror("waitpid failed");
 			exit(EXIT_FAILURE);
 		}
-	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	} while (!WIFEXITED(child_status) && !WIFSIGNALED(child_status));
+
+	if (WIFEXITED(child_status))
+	{
+		*status = WEXITSTATUS(child_status);
+	}
 }
 
 /**
@@ -81,6 +90,7 @@ void handle_child_process(pid_t pid)
 
 void execute_commands(char *cmd_argv[], char *envp[])
 {
+	int status = 0;
 	char *filepath;
 
 	pid_t pid;
@@ -103,7 +113,11 @@ void execute_commands(char *cmd_argv[], char *envp[])
 		}
 		else
 		{
-			handle_child_process(pid);
+			handle_child_process(pid, &status);
+			if (status != 0)
+			{
+				exit(status);
+			}
 		}
 
 		if (cmd_argv[0][0] != '/')
