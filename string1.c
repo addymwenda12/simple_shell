@@ -1,52 +1,109 @@
 #include "shell.h"
 
 /**
- * str_compare - Compare two strings
- * @s1: First string
- * @s2: Second string
+ * _strcat - concatenates two string in a path form
+ * @first: the first given destination
+ * @second: the second given source
  *
- * Return: 0 if the strings are equal, otherwise non-zero
+ * Return: (Success) to the newly string
+ * ------- (Fail) if it failed
  */
-
-int str_compare(char *s1, char *s2)
+char *_strcat(char *first, char *second)
 {
-	if (s1 == NULL || s2 == NULL)
-	{
-		return (-1);
-	}
+	int len1, len2, i = 0, j = 0;
+	char *result;
 
-	while (*s1 && (*s1 == *s2))
-	{
-		s1++;
-		s2++;
-	}
-
-	return (*(unsigned char *)s1 - *(unsigned char *)s2);
+	len1 = _strlen(first);
+	len2 = _strlen(second);
+	result = malloc((len1 + len2 + 2) * sizeof(char));
+	if (!result)
+		return (NULL);
+	*result = '\0';
+	while (first[j])
+		result[i++] = first[j++];
+	result[i++] = '/';
+	j = 0;
+	while (second[j])
+		result[i++] = second[j++];
+	result[i] = '\0';
+	return (result);
 }
-
 /**
- * my_strncmp - Compare two strings up to a specified number of characters.
- * @s1: The first string to compare.
- * @s2: The second string to compare.
- * @n: The maximum number of characters to compare.
+ * _strlen - finds the length of a given string
+ * @str: the given string
  *
- * Return: An integer less than, equal to, or greater than 0, depending on
- * the comparison result (similar to strncmp).
+ * Return: (Success) the length of the string
+ * ------- (Fail) negative value
  */
-
-int my_strncmp(char *s1, char *s2, unsigned int n)
+int _strlen(char *str)
 {
-	unsigned int i;
+	int len;
 
-	for (i = 0; i < n; i++)
+	for (len = 0; str[len]; len++)
+		;
+	return (len);
+}
+/**
+ * _strcmp - compare two strings
+ * @s1: the first given string
+ * @s2: the second given string
+ *
+ * Return: (Success) a positive number
+ * ------- (Fail) a negative number
+ */
+int _strcmp(char *s1, char *s2)
+{
+	int cmp = 0, i;
+
+	if (s1 == NULL || s2 == NULL)
+		return (1);
+	for (i = 0; s1[i]; i++)
 	{
 		if (s1[i] != s2[i])
-			return ((int)(unsigned char)s1[i] -
-					(int)(unsigned char)s2[i]);
-
-		if (s1[i] == '\0' || s2[i] == '\0')
-			return (0);
+		{
+			cmp = s1[i] - s2[i];
+			break;
+		}
+		else
+			continue;
 	}
+	return (cmp);
+}
+/**
+ * _strchr - locates a character in a given string
+ * @str: the given string
+ * @c: the given string
+ *
+ * Return: (Success) a pointer to the first occurence of c
+ * ------- (Fail) return a null pointer
+ */
+char *_strchr(char *str, char c)
+{
+	char *ptr;
 
-	return (0);
+	if (str == NULL)
+		return (NULL);
+	for (ptr = str; *ptr; ptr++)
+		if (*ptr == c)
+			return (ptr);
+	return (NULL);
+}
+/**
+ * _strdup - dupicates string
+ * @str: the given string
+ *
+ * Return: (Success) a pointer to the duplicated string
+ * ------- (Fail) return a null pointer
+ */
+char *_strdup(char *str)
+{
+	char *dupl;
+
+	if (str == NULL)
+		return (NULL);
+	dupl = malloc(_strlen(str) + 1);
+	if (dupl == NULL)
+		return (NULL);
+	_strcpy(dupl, str);
+	return (dupl);
 }

@@ -1,129 +1,33 @@
 #include "shell.h"
-
 /**
- * str_to_int - Convert a string to an integer
- * @s: String to be converted
+ * _strcpy - copie a string from source to destination
+ * @source: the string source
+ * @dest: the string destination
  *
- * Return: The converted integer
+ * Return: the pointer to dest
  */
-
-int str_to_int(char *s)
+char *_strcpy(char *dest, char *source)
 {
-	int result = 0;
-	int sign = 1;
+	int i;
 
-	if (*s == '-')
+	for (i = 0; source[i] != '\0'; i++)
 	{
-		sign = -1;
-		s++;
+		dest[i] = source[i];
 	}
-
-	while (*s >= '0' && *s <= '9')
-	{
-		result = result * 10 + (*s - '0');
-		s++;
-	}
-
-	return (sign * result);
+	dest[i] = '\0';
+	return (dest);
 }
-
 /**
- * my_strlen - Measure the string length
- * @s: String to be measured
+ * _isalpha - check if the input is a letter
+ * @c: the character to be checked
  *
- * Return: The length of string
+ * Return: 1 if letter, 0 otherwise
  */
-
-int my_strlen(char *s)
+int _isalpha(int c)
 {
-	int len = 0;
-
-	while (*s++)
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
 	{
-		len++;
+		return (SUCCESS);
 	}
-	return (len);
-}
-
-/**
- * my_strdup - Creates a duplicate of a string
- * @src: string duplicate
- *
- * Return: The duplicated string
- */
-
-char *my_strdup(char *src)
-{
-	char *str = malloc(my_strlen(src) + 1);
-	char *p = str;
-
-	while (*src)
-	{
-		*p++ = *src++;
-	}
-	*p = '\0';
-
-	return (str);
-}
-
-/**
- * my_strcat - Concatenate one string to the end of another string
- * @s1: The first string
- * @s2: The second string
- *
- * Return: Concatenated string
- */
-
-char *my_strcat(char *s1, char *s2)
-{
-	char *str = malloc(my_strlen(s1) + my_strlen(s2) + 1);
-	char *p = str;
-
-	while (*s1)
-	{
-		*p++ = *s1++;
-	}
-	while (*s2)
-	{
-		*p++ = *s2++;
-	}
-	*p = '\0';
-	return (str);
-}
-
-/**
- * itoa - converts integer to string
- * @num: Number to be converted
- *
- * Return: Converted string
- */
-
-char *itoa(int num)
-{
-	char *str = malloc(20);
-	char temp;
-	int i = 0, j = 0;
-	int sign = (num < 0) ? -1 : 1;
-
-	num = (sign < 0) ? -num : num;
-
-	do {
-		str[i++] = num % 10 + '0';
-	} while (num /= 10);
-
-	if (sign < 0)
-	{
-		str[i++] = '-';
-	}
-
-	str[i] = '\0';
-
-	for (j = 0; j < i / 2; j++)
-	{
-		temp = str[j];
-		str[j] = str[i - j - 1];
-		str[i - j - 1] = temp;
-	}
-
-	return (str);
+	return (FAIL);
 }

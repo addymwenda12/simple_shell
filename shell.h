@@ -2,77 +2,82 @@
 #define SHELL_H
 
 #include <stdio.h>
-#include <stdbool.h>
-#include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <fcntl.h>
 #include <errno.h>
-
-#define MAX_CMD_LEN 128
-#define HISTORY_COUNT 20
-
-
-
-/* Alias struct */
-
-/**
- * struct alias - alias built in command
- * @name: name of the alias
- * @value: value of the alias
- * @next: Points to the next node
- */
-typedef struct alias
-{
-	char *name;
-	char *value;
-	struct alias *next;
-} alias_t;
-
-int print_alias(char *name, alias_t **alias_list);
-int print_all_aliases(alias_t **alias_list);
-int add_alias(char *name, char *value, alias_t **alias_list);
-int handle_alias(char **cmd_argv, alias_t **alias_list);
 
 extern char **environ;
 
-/* Function prototypes for shell Program*/
-int my_strlen(char *s);
-char *my_strchr(char *s, int c);
-char *my_getenv(char *name, char **envp);
-char *my_strcpy(char *dest, char *src);
-char *my_strncpy(char *dest, char *src, size_t n);
-int my_isalnum(int c);
-int my_strncmp(char *s1, char *s2, unsigned int n);
-char *my_strdup(char *src);
-char *my_strcat(char *s1, char *s2);
-int main(int argc, char *argv[], char *envp[]);
-void tokenize(char *cmd, char *cmd_argv[]);
-char **tokenize_path(char *PATH);
-char *search_path(char *cmd, char **envp);
-int str_compare(char *s1, char *s2);
-int str_to_int(char *s);
-int _setenv(const char *name, const char *value, int overwrite);
-int _unsetenv(const char *name);
-int _cd(char *path);
-void handle_command(char *cmd, char *cmd_argv[], char *envp[],
-		alias_t **alias_list);
-void execute_child(char *filepath, char *cmd_argv[],
-		char *envp[]);
-char *get_file_path(char *cmd, char *envp[]);
-char *get_path(char **envp);
-char *create_filepath(char *path, char *cmd);
-void execute_commands(char *cmd_argv[], char *envp[]);
-void handle_child_process(pid_t pid, int *status);
-char *get_value(char *name, char **envp);
-void handle_cd(char *cmd_argv[], char **envp);
-void handle_unsetenv(char *cmd_argv[]);
-void handle_setenv(char *cmd_argv[]);
-void handle_exit(char *cmd, char *cmd_argv[]);
-char **command_separator(char *cmd);
-char *itoa(int num);
+#define BUFSIZE 256
+#define TOKENSIZE 64
+#define PRINT(c) (write(STDOUT_FILENO, c, _strlen(c)))
+#define PROMPT "$ "
+#define SUCCESS (1)
+#define FAIL (-1)
+#define NEUTRAL (0)
+
+typedef struct sh_data
+{
+    char *line;
+    char **args;
+    char *cmd;
+    char *error_msg;
+    char *oldpwd;
+    unsigned long int index;
+    char *env;
+} sh_t;
+
+typedef struct builtin
+{
+    char *cmd;
+    int (*f)(sh_t *data);
+} blt_t;
+
+int read_line(sh_t *);
+int split_line(sh_t *);
+int parse_line(sh_t *);
+int process_cmd(sh_t *);
+
+char *_strdup(char *str);
+char *_strcat(char *first, char *second);
+int _strlen(char *str);
+char *_strchr(char *str, char c);
+int _strcmp(char *s1, char *s2);
+
+char *_strcpy(char *dest, char *source);
+
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+char *_memset(char *s, char byt, unsigned int n);
+char *_memcpy(char *dest, char *src, unsigned int n);
+int free_data(sh_t *);
+
+void *fill_an_array(void *a, int el, unsigned int len);
+void signal_handler(int signo);
+char *_getenv(char *path_name);
+void index_cmd(sh_t *data);
+void array_rev(char *arr, int len);
+
+char *_itoa(unsigned int n);
+int intlen(int num);
+int _atoi(char *c);
+int print_error(sh_t *data);
+int write_history(sh_t *data);
+int _isalpha(int c);
+
+int abort_prg(sh_t *data);
+int change_dir(sh_t *data);
+int display_help(sh_t *data);
+int handle_builtin(sh_t *data);
+int check_builtin(sh_t *data);
+
+int is_path_form(sh_t *data);
+void is_short_form(sh_t *data);
+int is_builtin(sh_t *data);
 
 #endif
