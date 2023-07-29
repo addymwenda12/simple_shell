@@ -22,21 +22,37 @@ extern char **environ;
 #define FAIL (-1)
 #define NEUTRAL (0)
 
+/**
+ * struct sh_data - Custom data structure for a shell program
+ * @line: Pointer to a string representing the input line
+ * @args: Pointer to an array of strings representing command arguments
+ * @cmd: Pointer to a string representing the command name
+ * @error_msg: Pointer to a string containing an error message (if any)
+ * @oldpwd: Pointer to a string representing the previous working directory
+ * @index: Unsigned long integer representing an index or identifier
+ * @env: Pointer to a string representing the environment variable
+ */
 typedef struct sh_data
 {
-    char *line;
-    char **args;
-    char *cmd;
-    char *error_msg;
-    char *oldpwd;
-    unsigned long int index;
-    char *env;
+	char *line;
+	char **args;
+	char *cmd;
+	char *error_msg;
+	char *oldpwd;
+	unsigned long int index;
+	char *env;
 } sh_t;
 
+/**
+ * struct builtin - Custom data structure for shell built-in commands
+ * @cmd: Pointer to a string representing the name of the built-in command
+ * @f: Pointer to a function taking a 'sh_t' pointer as an argument and
+ * returning an integer
+ */
 typedef struct builtin
 {
-    char *cmd;
-    int (*f)(sh_t *data);
+	char *cmd;
+	int (*f)(sh_t *data);
 } blt_t;
 
 int read_line(sh_t *);
