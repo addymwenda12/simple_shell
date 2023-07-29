@@ -17,7 +17,7 @@ extern char **environ;
 #define BUFSIZE 256
 #define TOKENSIZE 64
 #define PRINT(c) (write(STDOUT_FILENO, c, _strlen(c)))
-#define PROMPT "cisciscisciscisciscisciscis$ "
+#define PROMPT "# "
 #define SUCCESS (1)
 #define FAIL (-1)
 #define NEUTRAL (0)
@@ -86,6 +86,7 @@ int print_error(sh_t *data);
 int write_history(sh_t *data);
 int _isalpha(int c);
 int handle_env(sh_t *data);
+int handle_exit(sh_t *data);
 
 int abort_prg(sh_t *data);
 int change_dir(sh_t *data);

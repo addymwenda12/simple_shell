@@ -112,6 +112,7 @@ int handle_builtin(sh_t *data)
 		{"exit", abort_prg},
 		{"cd", change_dir},
 		{"help", display_help},
+		{"env", handle_env},
 		{NULL, NULL}
 	};
 	int i = 0;
