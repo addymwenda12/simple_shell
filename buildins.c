@@ -56,7 +56,7 @@ int abort_prg(sh_t *data __attribute__((unused)))
 	if (data->args[1] == NULL)
 	{
 		free_data(data);
-		exit(errno);
+		exit(0);
 	}
 	while (data->args[1][i])
 	{
