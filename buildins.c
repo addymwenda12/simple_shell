@@ -116,6 +116,9 @@ int handle_builtin(sh_t *data)
 	};
 	int i = 0;
 
+	if (handle_env(data) == SUCCESS)
+		return (SUCCESS);
+
 	while ((blt + i)->cmd)
 	{
 		if (_strcmp(data->args[0], (blt + i)->cmd) == 0)

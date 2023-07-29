@@ -85,6 +85,7 @@ int _atoi(char *c);
 int print_error(sh_t *data);
 int write_history(sh_t *data);
 int _isalpha(int c);
+int handle_env(sh_t *data);
 
 int abort_prg(sh_t *data);
 int change_dir(sh_t *data);
